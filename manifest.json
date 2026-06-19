@@ -1,0 +1,20 @@
+{
+  "name": "我的账本",
+  "short_name": "账本",
+  "description": "AI 智能记账 - 拍照即记",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#08080f",
+  "theme_color": "#7c3aed",
+  "categories": ["finance", "productivity"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='80' fill='%2308080f'/%3E%3Crect x='60' y='60' width='392' height='392' rx='60' fill='%23712cf9' opacity='0.15'/%3E%3Cpath d='M160 380 V180 L256 240 L352 180 V380' fill='none' stroke='%23fff' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ctext x='256' y='420' font-family='-apple-system' font-size='120' fill='%23fff' text-anchor='middle' font-weight='bold'%3E$%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "splash_pages": null
+}
