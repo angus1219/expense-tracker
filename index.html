@@ -353,7 +353,7 @@ function updExp(e){return new Promise((rs,rj)=>{const r=db.transaction(STORE,'re
 function clearAll(){return new Promise((rs,rj)=>{const r=db.transaction(STORE,'readwrite').objectStore(STORE).clear();r.onsuccess=()=>rs();r.onerror=e=>rj(e)})}
 
 // ===== HELPERS =====
-function today(){const d=new Date();return d.toISOString().split('T')[0]}
+function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function fmtDate(s){const d=new Date(s+'T00:00:00');return `${d.getMonth()+1}月${d.getDate()}日 周${['日','一','二','三','四','五','六'][d.getDay()]}`}
 function fmtMYR(a){return'RM '+parseFloat(a).toFixed(2)}
 function isToday(s){return s===today()}
@@ -364,7 +364,6 @@ function catIcon(c){return CAT_ICONS[c]||'📦'}
 function catColor(c){return CAT_COLORS[c]||'#6b7280'}
 function getKey(){return localStorage.getItem('gemini_api_key')||''}
 function getPay(){return localStorage.getItem('default_payment')||'TNG'}
-function tdy(){const d=new Date();return d.toISOString().split('T')[0]}
 
 // ===== POPULATE SELECTS =====
 function populateSelects(){
