@@ -444,14 +444,14 @@ async function handlePhoto(inp){
     const ai=await analyzeImageWithGemini(f);
     buildForm(ai.amount||'',ai.merchant||'',ai.category||'其他',ai.date||today(),ai.note||'');
   }catch(e){
-    rc.innerHTML='<div class="ai-badge" style="color:#ef4444;border-color:rgba(239,68,68,.3)">⚠️ 识别失败</div>
-      <p style="color:#5a5a7a;font-size:13px;margin-bottom:12px">'+esc(e.message)+'</p>
+    rc.innerHTML=`<div class="ai-badge" style="color:#ef4444;border-color:rgba(239,68,68,.3)">⚠️ 识别失败</div>
+      <p style="color:#5a5a7a;font-size:13px;margin-bottom:12px">${esc(e.message)}</p>
       <div class="form-group"><label>金额 (RM)</label><input type="number" id="expAmount" step="0.01" min="0" placeholder="0.00"></div>
       <div class="form-group"><label>商家</label><input type="text" id="expMerchant" placeholder="商家名称"></div>
-      <div style="display:flex;gap:12px"><div class="form-group" style="flex:1"><label>日期</label><input type="date" id="expDate" value="'+today()+'"></div><div class="form-group" style="flex:1"><label>分类</label><select id="expCategory">'+CATEGORIES.map(x=>'<option value="'+x+'">'+catIcon(x)+' '+x+'</option>').join('')+'</select></div></div>
-      <div class="form-group"><label>支付方式</label><select id="expPayment">'+PAYMENTS.map(x=>'<option value="'+x+'">'+x+'</option>').join('')+'</select></div>
+      <div style="display:flex;gap:12px"><div class="form-group" style="flex:1"><label>日期</label><input type="date" id="expDate" value="${today()}"></div><div class="form-group" style="flex:1"><label>分类</label><select id="expCategory">${CATEGORIES.map(x=>`<option value="${x}">${catIcon(x)} ${x}</option>`).join('')}</select></div></div>
+      <div class="form-group"><label>支付方式</label><select id="expPayment">${PAYMENTS.map(x=>`<option value="${x}">${x}</option>`).join('')}</select></div>
       <div class="form-group"><label>备注</label><textarea id="expNote" placeholder="备注信息（可选）" rows="2"></textarea></div>
-      <button class="btn-primary" onclick="saveExpense()" style="width:100%">✅ 手动保存</button>';
+      <button class="btn-primary" onclick="saveExpense()" style="width:100%">✅ 手动保存</button>`;
   }
   inp.value='';
 }
