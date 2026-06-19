@@ -423,7 +423,7 @@ async function renderExpensesList(){
     return true;
   });
   const co=document.getElementById('expensesList');
-  if(f.length===0){co.innerHTML='<div class="empty-state"><div class="icon">🔍</div><h3>没有匹配的记录</h3></div>';return}
+  if(f.length===0){const names={all:'全部',today:'今日',week:'本周',month:'本月'};co.innerHTML='<div class="empty-state"><div class="icon">📭</div><h3>'+(names[currentFilter]||'')+' 暂无记录</h3></div>';return}
   let h='',cm='';f.forEach(t=>{
     const m=t.date.substring(0,7);if(m!==cm){cm=m;const[y,mo]=m.split('-');h+=`<div style="font-size:12px;color:#5a5a7a;padding:12px 4px 6px;font-weight:600">${y}年${parseInt(mo)}月</div>`}
     h+=`<div class="transaction-item" onclick="showActions(${t.id})">
@@ -444,13 +444,14 @@ async function handlePhoto(inp){
     const ai=await analyzeImageWithGemini(f);
     buildForm(ai.amount||'',ai.merchant||'',ai.category||'其他',ai.date||today(),ai.note||'');
   }catch(e){
-    rc.innerHTML=`<div class="ai-badge" style="color:#ef4444;border-color:rgba(239,68,68,.3)">⚠️ 识别失败</div>
-      <p style="color:#5a5a7a;font-size:13px;margin-bottom:12px">${esc(e.message)}</p>
+    rc.innerHTML='<div class="ai-badge" style="color:#ef4444;border-color:rgba(239,68,68,.3)">⚠️ 识别失败</div>
+      <p style="color:#5a5a7a;font-size:13px;margin-bottom:12px">'+esc(e.message)+'</p>
       <div class="form-group"><label>金额 (RM)</label><input type="number" id="expAmount" step="0.01" min="0" placeholder="0.00"></div>
       <div class="form-group"><label>商家</label><input type="text" id="expMerchant" placeholder="商家名称"></div>
-      <div class="form-row"><div class="form-group"><label>日期</label><input type="date" id="expDate" value="${today()}"></div>
-      <div class="form-group"><label>分类</label><select id="expCategory">${CATEGORIES.map(x=>`<option value="${x}">${catIcon(x)} ${x}</option>`).join('')}</select></div></div>
-      <button class="btn-primary" onclick="saveExpense()" style="width:100%">✅ 手动保存</button>`;
+      <div style="display:flex;gap:12px"><div class="form-group" style="flex:1"><label>日期</label><input type="date" id="expDate" value="'+today()+'"></div><div class="form-group" style="flex:1"><label>分类</label><select id="expCategory">'+CATEGORIES.map(x=>'<option value="'+x+'">'+catIcon(x)+' '+x+'</option>').join('')+'</select></div></div>
+      <div class="form-group"><label>支付方式</label><select id="expPayment">'+PAYMENTS.map(x=>'<option value="'+x+'">'+x+'</option>').join('')+'</select></div>
+      <div class="form-group"><label>备注</label><textarea id="expNote" placeholder="备注信息（可选）" rows="2"></textarea></div>
+      <button class="btn-primary" onclick="saveExpense()" style="width:100%">✅ 手动保存</button>';
   }
   inp.value='';
 }
@@ -490,7 +491,7 @@ function fileToBase64(f){return new Promise((rs,rj)=>{const r=new FileReader();r
 
 // ===== SAVE =====
 async function saveExpense(){
-  const a=parseFloat(document.getElementById('expAmount')?.value),m=document.getElementById('expMerchant')?.value.trim(),c=document.getElementById('expCategory')?.value,d=document.getElementById('expDate')?.value,p=document.getElementById('expPayment')?.value,n=document.getElementById('expNote')?.value.trim();
+  const a=parseFloat(document.getElementById('expAmount')?.value||0),m=(document.getElementById('expMerchant')?.value||'').trim(),c=document.getElementById('expCategory')?.value||'其他',d=document.getElementById('expDate')?.value||today(),p=document.getElementById('expPayment')?.value||getPay(),n=(document.getElementById('expNote')?.value||'').trim();
   if(!a||a<=0){showToast('⚠️ 请输入有效金额');return}
   if(!m){showToast('⚠️ 请输入商家名称');return}
   try{await addExp({amount:a,merchant:m,category:c,date:d,payment:p,note:n});showToast('✅ 已记录：'+fmtMYR(a)+' — '+m);navigate('dashboard');resetForm()}catch(e){showToast('⚠️ 保存失败')}
