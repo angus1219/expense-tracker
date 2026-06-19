@@ -478,7 +478,7 @@ function buildForm(amt,mch,cat,dt,note){
 async function analyzeImageWithGemini(file){
   const key=getKey();if(!key){navigate('settings');throw new Error('请先到「设置」输入 Gemini API Key')}
   const b64=await fileToBase64(file),mt=file.type||'image/jpeg';
-  const resp=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,{
+  const resp=await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash-lite:generateContent?key=${key}`,{
     method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({contents:[{parts:[{inline_data:{mime_type:mt,data:b64.split(',')[1]}},{text:'You are a receipt OCR assistant. Extract from this receipt: amount (number), merchant (store name), category (one of: 餐饮,交通,购物,娱乐,住房,医疗,教育,通讯,日用,其他), date (YYYY-MM-DD), note (brief). Return ONLY valid JSON: {"amount":45.60,"merchant":"商家名","category":"餐饮","date":"2026-06-20","note":""}. No markdown, no extra text.'}]}]})});
   if(!resp.ok){const t=await resp.text();if(resp.status===403||resp.status===400)throw new Error('API Key 无效，请到设置检查');if(resp.status===429)throw new Error('Gemini 免费配额已用完，明天再试或换一个 API Key');throw new Error('AI 识别失败 ('+resp.status+')')}
